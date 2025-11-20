@@ -95,6 +95,26 @@ const KontakPage = () => {
         </div>
       </section>
 
+      {/* Google Maps */}
+      {settings?.google_maps_embed && (
+        <section className="py-12 bg-muted">
+          <div className="container mx-auto px-4">
+            <h2 className="text-3xl font-cairo font-bold text-gold text-center mb-8">Lokasi Kantor Kami</h2>
+            <div className="aspect-video max-w-4xl mx-auto rounded-lg overflow-hidden shadow-elegant">
+              <iframe
+                src={settings.google_maps_embed}
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              ></iframe>
+            </div>
+          </div>
+        </section>
+      )}
+
       <Footer />
     </div>
   );
