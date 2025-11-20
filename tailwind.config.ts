@@ -14,6 +14,9 @@ export default {
     },
     extend: {
       colors: {
+        gold: "hsl(var(--gold))",
+        'dark-green': "hsl(var(--dark-green))",
+        'dark-blue': "hsl(var(--dark-blue))",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -57,6 +60,10 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+      },
+      fontFamily: {
+        'cairo': ['Cairo', 'sans-serif'],
+        'poppins': ['Poppins', 'sans-serif'],
       },
       borderRadius: {
         lg: "var(--radius)",
