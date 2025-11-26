@@ -141,27 +141,76 @@ const HomePage = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {featuredPackages.map((pkg) => (
-                <Card key={pkg.id} className="overflow-hidden hover:shadow-gold transition-smooth border-gold/20">
-                  {pkg.image_url && (
-                    <div className="h-48 bg-gradient-islamic"></div>
-                  )}
-                  <div className="p-6">
-                    <h3 className="text-2xl font-cairo font-bold text-gold mb-2">
-                      {pkg.name}
-                    </h3>
-                    <p className="text-muted-foreground mb-4">{pkg.description}</p>
-                    <div className="space-y-2 text-sm mb-4">
-                      <p><strong>Durasi:</strong> {pkg.duration_days} Hari</p>
-                      {pkg.airline && <p><strong>Maskapai:</strong> {pkg.airline}</p>}
-                      {pkg.price && (
-                        <p className="text-2xl font-bold text-gold">
-                          Rp {pkg.price.toLocaleString('id-ID')}
-                        </p>
-                      )}
+                <Card key={pkg.id} className="relative overflow-hidden hover:shadow-gold transition-smooth border-2 border-gold/30 bg-gradient-to-br from-[#0A3D2E] to-[#0A1A2F]">
+                  {/* Decorative Islamic corners */}
+                  <div className="absolute top-0 left-0 w-12 h-12 border-t-2 border-l-2 border-gold/50"></div>
+                  <div className="absolute top-0 right-0 w-12 h-12 border-t-2 border-r-2 border-gold/50"></div>
+                  <div className="absolute bottom-0 left-0 w-12 h-12 border-b-2 border-l-2 border-gold/50"></div>
+                  <div className="absolute bottom-0 right-0 w-12 h-12 border-b-2 border-r-2 border-gold/50"></div>
+                  
+                  <div className="p-6 text-white relative z-10">
+                    {/* Company Logo/Icon */}
+                    <div className="flex justify-center mb-4">
+                      <div className="w-20 h-20 rounded-full border-4 border-gold flex items-center justify-center bg-gradient-to-br from-gold/20 to-transparent">
+                        <span className="text-3xl text-gold font-cairo font-bold">SA</span>
+                      </div>
                     </div>
+
+                    {/* Company Name */}
+                    <div className="text-center mb-3">
+                      <h2 className="text-2xl font-cairo font-bold text-white mb-1">SYAFAAT AGUNG</h2>
+                      <p className="text-gold text-sm">Tour and Travel Umroh</p>
+                    </div>
+
+                    {/* Tagline */}
+                    {pkg.tagline && (
+                      <p className="text-center text-gold/90 italic text-xs mb-4">"{pkg.tagline}"</p>
+                    )}
+
+                    {/* Package Name */}
+                    <h3 className="text-xl font-cairo font-bold text-white text-center mb-2">
+                      {pkg.name} {pkg.season_type && `(${pkg.season_type})`}
+                    </h3>
+
+                    {/* Departure Month */}
+                    {pkg.departure_month && (
+                      <p className="text-gold text-center text-sm mb-4">
+                        Keberangkatan {pkg.departure_month}
+                      </p>
+                    )}
+
+                    {/* Pricing Section */}
+                    {(pkg.price_quads || pkg.price_triple || pkg.price_double) && (
+                      <div className="mb-4 border-t border-b border-gold/30 py-3">
+                        <p className="text-gold font-semibold text-sm mb-2">Biaya:</p>
+                        <div className="space-y-1 text-xs">
+                          {pkg.price_quads && (
+                            <div className="flex justify-between">
+                              <span className="text-gold">Rp {pkg.price_quads.toLocaleString('id-ID')}</span>
+                              <span className="text-white">/ Quads</span>
+                            </div>
+                          )}
+                          {pkg.price_triple && (
+                            <div className="flex justify-between">
+                              <span className="text-gold">Rp {pkg.price_triple.toLocaleString('id-ID')}</span>
+                              <span className="text-white">/ Triple</span>
+                            </div>
+                          )}
+                          {pkg.price_double && (
+                            <div className="flex justify-between">
+                              <span className="text-gold">Rp {pkg.price_double.toLocaleString('id-ID')}</span>
+                              <span className="text-white">/ Double</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* CTA Button */}
                     <Link to="/paket-umroh">
-                      <Button className="w-full bg-gradient-gold hover:opacity-90">
-                        Lihat Detail
+                      <Button className="w-full bg-gradient-gold hover:opacity-90 transition-smooth font-semibold text-sm">
+                        Lihat Detail Lengkap
+                        <ArrowRight className="ml-2" size={16} />
                       </Button>
                     </Link>
                   </div>
