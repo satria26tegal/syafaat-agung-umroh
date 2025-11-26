@@ -175,6 +175,7 @@ export type Database = {
           airline: string | null
           created_at: string | null
           departure_dates: string[] | null
+          departure_month: string | null
           description: string | null
           duration_days: number
           facilities: string[] | null
@@ -182,15 +183,23 @@ export type Database = {
           hotel_makkah: string | null
           id: string
           image_url: string | null
+          included_items: string[] | null
           is_active: boolean | null
           name: string
+          not_included_items: string[] | null
           price: number | null
+          price_double: number | null
+          price_quads: number | null
+          price_triple: number | null
+          season_type: string | null
+          tagline: string | null
           updated_at: string | null
         }
         Insert: {
           airline?: string | null
           created_at?: string | null
           departure_dates?: string[] | null
+          departure_month?: string | null
           description?: string | null
           duration_days: number
           facilities?: string[] | null
@@ -198,15 +207,23 @@ export type Database = {
           hotel_makkah?: string | null
           id?: string
           image_url?: string | null
+          included_items?: string[] | null
           is_active?: boolean | null
           name: string
+          not_included_items?: string[] | null
           price?: number | null
+          price_double?: number | null
+          price_quads?: number | null
+          price_triple?: number | null
+          season_type?: string | null
+          tagline?: string | null
           updated_at?: string | null
         }
         Update: {
           airline?: string | null
           created_at?: string | null
           departure_dates?: string[] | null
+          departure_month?: string | null
           description?: string | null
           duration_days?: number
           facilities?: string[] | null
@@ -214,9 +231,16 @@ export type Database = {
           hotel_makkah?: string | null
           id?: string
           image_url?: string | null
+          included_items?: string[] | null
           is_active?: boolean | null
           name?: string
+          not_included_items?: string[] | null
           price?: number | null
+          price_double?: number | null
+          price_quads?: number | null
+          price_triple?: number | null
+          season_type?: string | null
+          tagline?: string | null
           updated_at?: string | null
         }
         Relationships: []
