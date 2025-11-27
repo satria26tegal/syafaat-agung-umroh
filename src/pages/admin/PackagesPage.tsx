@@ -11,7 +11,19 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Plus, Edit, Trash2 } from "lucide-react";
+import { Plus, Pencil, Trash2 } from "lucide-react";
+import { CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { supabase } from "@/integrations/supabase/client";
@@ -59,6 +71,10 @@ const PackagesPage = () => {
     setIsDialogOpen(true);
   };
 
+  const handleDelete = (id: string) => {
+    deleteMutation.mutate(id);
+  };
+
   return (
     <AdminLayout>
       <div className="mb-8 flex justify-between items-center">
@@ -86,63 +102,124 @@ const PackagesPage = () => {
       </div>
 
       {isLoading ? (
-        <div>Loading...</div>
-      ) : (
-        <div className="grid gap-6">
-          {packages?.map((pkg) => (
-            <Card key={pkg.id} className="p-6 border-gold/20">
-              <div className="flex justify-between items-start">
-                <div className="flex-1">
-                  <h3 className="text-2xl font-cairo font-bold text-gold mb-2">
-                    {pkg.name} {pkg.season_type && `(${pkg.season_type})`}
-                  </h3>
-                  {pkg.tagline && (
-                    <p className="text-gold/80 italic text-sm mb-2">"{pkg.tagline}"</p>
+        <div className="text-center py-8">Loading packages...</div>
+      ) : packages && packages.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {packages.map((pkg) => (
+            <Card key={pkg.id} className="relative overflow-hidden border-2 border-[#D4AF37]">
+              {/* Islamic Decorative Border */}
+              <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-[#D4AF37] via-[#0A3D2E] to-[#D4AF37]"></div>
+              <div className="absolute bottom-0 left-0 w-full h-2 bg-gradient-to-r from-[#D4AF37] via-[#0A3D2E] to-[#D4AF37]"></div>
+
+              <CardHeader className="text-center bg-gradient-to-br from-[#0A3D2E] to-[#0A1A2F] text-white pb-4">
+                {/* Logo Placeholder */}
+                <div className="mx-auto w-16 h-16 bg-[#D4AF37] rounded-full flex items-center justify-center mb-2">
+                  <span className="text-2xl font-bold text-[#0A3D2E]">SA</span>
+                </div>
+                <p className="text-xs text-[#D4AF37] mb-1">SYAFAAT AGUNG TOUR AND TRAVEL</p>
+                <CardTitle className="text-xl mb-2">{pkg.name}</CardTitle>
+                {pkg.tagline && <p className="text-sm italic text-[#D4AF37]">"{pkg.tagline}"</p>}
+              </CardHeader>
+
+              <CardContent className="p-6 space-y-4 bg-gradient-to-b from-white to-gray-50">
+                {/* Season & Month */}
+                <div className="text-center space-y-1">
+                  {pkg.season_type && (
+                    <div className="inline-block px-4 py-1 bg-[#D4AF37] text-[#0A3D2E] rounded-full text-sm font-bold">
+                      {pkg.season_type}
+                    </div>
                   )}
-                  <p className="text-muted-foreground mb-4">{pkg.description}</p>
-                  <div className="grid md:grid-cols-2 gap-4 text-sm">
-                    <div><strong>Durasi:</strong> {pkg.duration_days} Hari</div>
-                    {pkg.departure_month && (
-                      <div><strong>Keberangkatan:</strong> {pkg.departure_month}</div>
-                    )}
-                    {pkg.price_quads && (
-                      <div><strong>Harga Quads:</strong> Rp {pkg.price_quads?.toLocaleString('id-ID')}</div>
-                    )}
-                    {pkg.price_triple && (
-                      <div><strong>Harga Triple:</strong> Rp {pkg.price_triple?.toLocaleString('id-ID')}</div>
-                    )}
-                    {pkg.price_double && (
-                      <div><strong>Harga Double:</strong> Rp {pkg.price_double?.toLocaleString('id-ID')}</div>
-                    )}
-                    <div><strong>Maskapai:</strong> {pkg.airline || "-"}</div>
-                    <div><strong>Status:</strong> {pkg.is_active ? "Aktif" : "Non-aktif"}</div>
-                  </div>
+                  {pkg.departure_month && (
+                    <p className="text-sm text-gray-600 mt-2">Keberangkatan: <span className="font-semibold">{pkg.departure_month}</span></p>
+                  )}
                 </div>
-                <div className="flex space-x-2">
-                  <Button
-                    size="sm"
-                    variant="outline"
+
+                {/* Pricing */}
+                <div className="bg-gradient-to-br from-[#0A3D2E] to-[#0A1A2F] text-white p-4 rounded-lg space-y-2">
+                  <p className="text-center text-xs text-[#D4AF37] mb-2">HARGA PAKET</p>
+                  {pkg.price_quads && (
+                    <div className="flex justify-between items-center border-b border-[#D4AF37]/30 pb-1">
+                      <span className="text-sm">Quads</span>
+                      <span className="font-bold text-[#D4AF37]">Rp {pkg.price_quads.toLocaleString("id-ID")}</span>
+                    </div>
+                  )}
+                  {pkg.price_triple && (
+                    <div className="flex justify-between items-center border-b border-[#D4AF37]/30 pb-1">
+                      <span className="text-sm">Triple</span>
+                      <span className="font-bold text-[#D4AF37]">Rp {pkg.price_triple.toLocaleString("id-ID")}</span>
+                    </div>
+                  )}
+                  {pkg.price_double && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">Double</span>
+                      <span className="font-bold text-[#D4AF37]">Rp {pkg.price_double.toLocaleString("id-ID")}</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Duration */}
+                <div className="text-center">
+                  <span className="inline-block px-4 py-2 bg-[#0A3D2E] text-[#D4AF37] rounded-md text-sm font-semibold">
+                    {pkg.duration_days} Hari
+                  </span>
+                </div>
+
+                {/* Status */}
+                <div className="text-center">
+                  <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${pkg.is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                    {pkg.is_active ? "Aktif" : "Non-aktif"}
+                  </span>
+                </div>
+
+                {/* Description */}
+                {pkg.description && (
+                  <p className="text-sm text-gray-600 text-center line-clamp-3">{pkg.description}</p>
+                )}
+
+                {/* Action Buttons */}
+                <div className="flex gap-2 pt-4">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
                     onClick={() => handleEdit(pkg)}
-                    className="border-gold text-gold"
+                    className="flex-1 border-[#0A3D2E] text-[#0A3D2E] hover:bg-[#0A3D2E] hover:text-white"
                   >
-                    <Edit size={16} />
+                    <Pencil className="h-4 w-4 mr-1" />
+                    Edit
                   </Button>
-                  <Button
-                    size="sm"
-                    variant="destructive"
-                    onClick={() => {
-                      if (confirm("Yakin ingin menghapus paket ini?")) {
-                        deleteMutation.mutate(pkg.id);
-                      }
-                    }}
-                  >
-                    <Trash2 size={16} />
-                  </Button>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button 
+                        variant="destructive" 
+                        size="sm"
+                        className="flex-1"
+                      >
+                        <Trash2 className="h-4 w-4 mr-1" />
+                        Delete
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Hapus Paket?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Tindakan ini tidak dapat dibatalkan. Paket akan dihapus secara permanen.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Batal</AlertDialogCancel>
+                        <AlertDialogAction onClick={() => handleDelete(pkg.id)}>
+                          Hapus
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </div>
-              </div>
+              </CardContent>
             </Card>
           ))}
         </div>
+      ) : (
+        <div className="text-center py-8">Belum ada paket</div>
       )}
     </AdminLayout>
   );
