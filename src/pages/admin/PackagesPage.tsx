@@ -227,32 +227,62 @@ const PackagesPage = () => {
 
 const PackageForm = ({ package: pkg, onClose }: any) => {
   const queryClient = useQueryClient();
-  const [formData, setFormData] = useState(pkg || {
-    name: "",
-    description: "",
-    duration_days: 9,
-    price_quads: "",
-    price_triple: "",
-    price_double: "",
-    airline: "",
-    hotel_makkah: "",
-    hotel_madinah: "",
-    facilities: "",
-    included_items: "",
-    not_included_items: "",
-    season_type: "",
-    tagline: "",
-    departure_month: "",
-    is_active: true,
-  });
+  
+  // Initialize form data properly, handling array fields
+  const getInitialFormData = () => {
+    if (pkg) {
+      return {
+        ...pkg,
+        facilities: Array.isArray(pkg.facilities) ? pkg.facilities.join('\n') : (pkg.facilities || ""),
+        included_items: Array.isArray(pkg.included_items) ? pkg.included_items.join('\n') : (pkg.included_items || ""),
+        not_included_items: Array.isArray(pkg.not_included_items) ? pkg.not_included_items.join('\n') : (pkg.not_included_items || ""),
+        price_quads: pkg.price_quads || "",
+        price_triple: pkg.price_triple || "",
+        price_double: pkg.price_double || "",
+      };
+    }
+    return {
+      name: "",
+      description: "",
+      duration_days: 9,
+      price_quads: "",
+      price_triple: "",
+      price_double: "",
+      airline: "",
+      hotel_makkah: "",
+      hotel_madinah: "",
+      facilities: "",
+      included_items: "",
+      not_included_items: "",
+      season_type: "",
+      tagline: "",
+      departure_month: "",
+      is_active: true,
+    };
+  };
+  
+  const [formData, setFormData] = useState(getInitialFormData());
 
   const saveMutation = useMutation({
     mutationFn: async (data: any) => {
+      // Convert string prices to numbers and prepare arrays
       const payload = {
-        ...data,
-        facilities: data.facilities ? data.facilities.split('\n').filter(Boolean) : [],
-        included_items: data.included_items ? data.included_items.split('\n').filter(Boolean) : [],
-        not_included_items: data.not_included_items ? data.not_included_items.split('\n').filter(Boolean) : [],
+        name: data.name,
+        description: data.description || null,
+        duration_days: parseInt(data.duration_days),
+        price_quads: data.price_quads ? parseFloat(data.price_quads) : null,
+        price_triple: data.price_triple ? parseFloat(data.price_triple) : null,
+        price_double: data.price_double ? parseFloat(data.price_double) : null,
+        airline: data.airline || null,
+        hotel_makkah: data.hotel_makkah || null,
+        hotel_madinah: data.hotel_madinah || null,
+        facilities: data.facilities ? data.facilities.split('\n').filter((item: string) => item.trim()) : [],
+        included_items: data.included_items ? data.included_items.split('\n').filter((item: string) => item.trim()) : [],
+        not_included_items: data.not_included_items ? data.not_included_items.split('\n').filter((item: string) => item.trim()) : [],
+        season_type: data.season_type || null,
+        tagline: data.tagline || null,
+        departure_month: data.departure_month || null,
+        is_active: data.is_active !== undefined ? data.is_active : true,
       };
 
       if (pkg?.id) {
@@ -273,6 +303,10 @@ const PackageForm = ({ package: pkg, onClose }: any) => {
       queryClient.invalidateQueries({ queryKey: ["umroh-packages"] });
       toast.success(`Paket berhasil ${pkg ? "diupdate" : "ditambahkan"}!`);
       onClose();
+    },
+    onError: (error: any) => {
+      toast.error(`Gagal menyimpan paket: ${error.message}`);
+      console.error("Error saving package:", error);
     },
   });
 
